@@ -851,7 +851,7 @@ function SynthPads() {
    This whole app runs in the browser only — there is no server. That means:
    - The admin password below is visible to anyone who opens dev tools or
      views the page source. It is a speed bump, not a lock.
-   - "Client login" (name + code) is not encrypted and is matched entirely
+   - "Artist login" (name + code) is not encrypted and is matched entirely
      on the client side. Anyone with a name + code combination gets in.
    - Data lives in this artifact's shared storage, not a real database —
      no backups, no audit log, no rate limiting.
@@ -2168,7 +2168,7 @@ function MarketingSite({ onOpenPortal }) {
           </nav>
           <div className="hidden md:flex items-center gap-3">
             <button onPointerDown={onOpenPortal} className="glass px-4 py-2.5 rounded-full text-sm font-display font-medium inline-flex items-center gap-2 hover:border-gold-30 transition-all">
-              <User size={14} className="text-gold" /> Client Login
+              <User size={14} className="text-gold" /> Artist Login
             </button>
             <a href={GOOGLE_FORM_URL} target="_blank" rel="noopener noreferrer" onPointerDown={addRipple} className="ripple-host gradient-gold-bg text-black font-display font-semibold text-sm px-5 py-2.5 rounded-full hover:brightness-110 transition-all inline-flex items-center gap-2">
               Start Your Release <ArrowRight size={15} />
@@ -2197,7 +2197,7 @@ function MarketingSite({ onOpenPortal }) {
           onPointerDown={() => { closeMobile(); onOpenPortal(); }}
           className="font-display text-lg text-gray-300 hover:text-gold transition-colors inline-flex items-center gap-2"
         >
-          <User size={16} className="text-gold" /> Client Login
+          <User size={16} className="text-gold" /> Artist Login
         </button>
         <a href={GOOGLE_FORM_URL} target="_blank" rel="noopener noreferrer" onClick={closeMobile} onPointerDown={addRipple} className="ripple-host mt-4 gradient-gold-bg text-black font-display font-semibold px-6 py-3 rounded-full">
           Start Your Release
