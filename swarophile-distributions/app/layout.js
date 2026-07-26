@@ -9,7 +9,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body><meta name="google-site-verification" content="2aJl7PGHjcfoED0fOG7eYj-fT5W-0hk69j0EM3_xPXk" />
+      {children}</body>
     </html>
   );
 }
