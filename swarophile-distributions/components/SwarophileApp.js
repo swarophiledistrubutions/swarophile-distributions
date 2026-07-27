@@ -1,5 +1,6 @@
 'use client';
 
+import { supabase } from '../lib/supabase';
 import * as Tone from 'tone';
 import { storage } from '../lib/storage';
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
@@ -1153,18 +1154,68 @@ function ArtistLogin({ clients, onBack, onPickSignup, onSuccess }) {
   const [error, setError] = useState('');
   const [checking, setChecking] = useState(false);
 
-  const submit = async () => {
-    const uname = normalizeUsername(username);
-    const match = clients.find((c) => c.username && c.username.toLowerCase() === uname);
-    if (!match) { setError('No account found with that username.'); return; }
+ const submit = async () => {
+    if (!username.trim() || !password.trim()) {
+      setError('Please enter both your email and password.');
+      return;
+    }
+
     setChecking(true);
-    const enteredHash = await hashPassword(password);
-    setChecking(false);
-    if (enteredHash && match.passwordHash && enteredHash === match.passwordHash) {
-      setError('');
-      onSuccess(match);
-    } else {
-      setError('Incorrect password.');
+    setError('');
+
+    try {
+      // Look up the artist inside the Supabase table by their email
+      const { data, error } = await supabase
+        .from('artists')
+        .select('*')
+        .eq('email', username.trim())
+        .maybeSingle();
+
+      if (error) {
+        setError(error.message);
+        setChecking(false);
+        return;
+      }
+
+      if (!data) {
+        setError('No account found with that email address.');
+        setChecking(false);
+        return;
+      }
+
+      // Verify the password matching the text in the DB column
+      if (data.password !== password) {
+        setError('Incorrect password.');
+        setChecking(false);
+        return;
+      }
+
+      setChecking(false);
+      onSuccess(data);
+    } catch (err) {
+      setError('Something went wrong connecting to the database.');
+      setChecking(false);
+    }
+  };
+
+      if (!data) {
+        setError('No account found with that email address.');
+        setChecking(false);
+        return;
+      }
+
+      // Verify the password matching the text in the DB column
+      if (data.password !== password) {
+        setError('Incorrect password.');
+        setChecking(false);
+        return;
+      }
+
+      setChecking(false);
+      onSuccess(data);
+    } catch (err) {
+      setError('Something went wrong connecting to the database.');
+      setChecking(false);
     }
   };
 
@@ -1229,15 +1280,46 @@ function ArtistSignup({ clients, onBack, onCreate }) {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
-  const submit = () => {
-    if (!name.trim() || !email.trim()) { setError('Name and email are required.'); return; }
-    if (!email.includes('@')) { setError('Enter a valid email address.'); return; }
-    const uname = normalizeUsername(username || name);
-    if (!uname) { setError('Choose a username.'); return; }
-    if (isUsernameTaken(uname, clients)) { setError('That username is already taken \u2014 try another.'); return; }
+  const submit = async () => {
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      setError('Name, email, and password are required.');
+      return;
+    }
+    if (!email.includes('@')) {
+      setError('Enter a valid email address.');
+      return;
+    }
+
     setError('');
-    onCreate({ name: name.trim(), username: uname, email: email.trim() });
+    
+    try {
+      // Insert the new artist into the Supabase database
+      const { data, error } = await supabase
+        .from('artists')
+        .insert([
+          { 
+            name: name.trim(), 
+            email: email.trim().toLowerCase(), 
+            password: password 
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        setError(error.message);
+        return;
+      }
+
+      // If successful, pass the data up to log them in automatically
+      if (data) {
+        onCreate(data);
+      }
+    } catch (err) {
+      setError('Something went wrong connecting to the database.');
+    }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 fade-in">
