@@ -1188,33 +1188,20 @@ function ArtistLogin({ clients, onBack, onPickSignup, onSuccess }) {
         setError('Incorrect password.');
         setChecking(false);
         return;
-      }
-
+      
+// Verify the password matching the text in the DB column
+    if (data.password !== password) {
+      setError('Incorrect password.');
       setChecking(false);
-      onSuccess(data);
+      return;
     }
-    } catch (err) {
-      setError('Something went wrong connecting to the database.');
-      setChecking(false);
-    }
-  };
 
-      if (!data) {
-        setError('No account found with that email address.');
-        setChecking(false);
-        return;
-      }
-
-      // Verify the password matching the text in the DB column
-      if (data.password !== password) {
-        setError('Incorrect password.');
-        setChecking(false);
-        return;
-      }
-
-      setChecking(false);
+    setChecking(false);
     onSuccess(data);
-    ;
+  } catch (err) {
+    setError('Something went wrong connecting to the database.');
+    setChecking(false);
+  }
   
     return (
     <div className="min-h-screen flex items-center justify-center px-6 fade-in">
