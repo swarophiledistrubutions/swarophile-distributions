@@ -1175,7 +1175,7 @@ function ArtistLogin({ clients, onBack, onPickSignup, onSuccess }) {
         setError(error.message);
         setChecking(false);
         return;
-      }
+      
 
       if (!data) {
         setError('No account found with that email address.');
@@ -1192,6 +1192,7 @@ function ArtistLogin({ clients, onBack, onPickSignup, onSuccess }) {
 
       setChecking(false);
       onSuccess(data);
+    }
     } catch (err) {
       setError('Something went wrong connecting to the database.');
       setChecking(false);
