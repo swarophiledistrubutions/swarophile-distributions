@@ -1213,7 +1213,7 @@ function ArtistLogin({ clients, onBack, onPickSignup, onSuccess }) {
 
       setChecking(false);
     onSuccess(data);
-    };
+    ;
   
     return (
     <div className="min-h-screen flex items-center justify-center px-6 fade-in">
@@ -1262,7 +1262,7 @@ function ArtistLogin({ clients, onBack, onPickSignup, onSuccess }) {
       </div>
     </div>
   );
-
+}
 
 /* Self-serve sign-up. IMPORTANT: this simulates what a "Continue with Google"
    flow would look like — it is NOT connected to a real Google account. Real
